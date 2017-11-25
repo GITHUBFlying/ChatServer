@@ -1,6 +1,7 @@
 #!/usr/bin/env python   
 # -*- coding:UTF-8 -*-  
-# telnet program example
+
+
 import socket, select, string, sys
  
 def prompt() :
