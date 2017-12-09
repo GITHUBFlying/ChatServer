@@ -4,6 +4,14 @@
 
 import socket, select, string, sys
  
+import json
+
+robotid={
+	"id": "user",
+	"moi_id":  0,
+	"type"  :  0
+}
+ 
 def prompt() :
     sys.stdout.write('<You> ')
     sys.stdout.flush()
@@ -52,5 +60,6 @@ if __name__ == "__main__":
             #user entered a message
             else :
                 msg = sys.stdin.readline()
-                s.send(msg)
+                jsondata=json.dumps(robotid)
+                s.send(jsondata)
                 prompt()
