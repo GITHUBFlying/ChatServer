@@ -10,7 +10,6 @@ CONNECTION_LIST = []
 RECV_BUFFER = 4096
 
 robots=[]
-robotsSock=[]
 
 def result(ip):
 	res={
@@ -26,20 +25,10 @@ def handle_data(sock,ip,data):
 	if res['id'] == "user":
 		print 'User:user connected,user want to connect robot:'+str(robotid)
 		flag=True
-		for i in range(len(robots)):
-			if robots[i]['moi_id'] == robotid:
+		for robot in robots:
+			if robotid == robot['moi_id']:
 				print 'this robot is online!'
-				#向机器人转发消息
-				robotsSock[i].send(data)
-				try:
-					#接收机器人的回复消息
-					robot_data=robotsSock[i].recv(4096)
-				except:
-					print 'error'
-					print "but this robot is offline"
-					sock.send("{\"res\":1}")
-				#向用户转发发送机器人的消息
-				sock.send(robot_data)
+				sock.send(result(robot['ip']))
 				flag=False
 		if flag:
 			#机器人未上线
@@ -56,7 +45,6 @@ def handle_data(sock,ip,data):
 			print 'robot id:'+str(robotid)+':resgistered'
 			robots.append(res)
 			sock.send("ok!")
-			robotsSock.append(sock)
 	print 'Online robot-->:'
 	for key in robots:
 		print 'robotid:'+str(key['moi_id'])+" ip:"+key['ip']

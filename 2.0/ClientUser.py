@@ -8,11 +8,16 @@ import json
 ServerHost='47.100.3.155'
 ServerPort=5000
 
+#as a robotClient
+RobotHost=None
+RobotListenerPort=6001
+CONNECTION_LIST = []
+RECV_BUFFER = 4096
+
 userid={
 	"id": "user",
 	"moi_id":  0,
-	"type"  :  0,
-	"message": "hello"
+	"type"  :  0
 }
 
 def prompt() :
@@ -27,6 +32,8 @@ if __name__=="__main__":
 	#as server client
 	client=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	client.settimeout(2)
+	#as a robot server
+	robotClient = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	
 	
 	try:
 		#连接远程IP  登录
@@ -48,7 +55,16 @@ if __name__=="__main__":
 		
 	
 	CONNECTION_LIST.append(client)
-	CONNECTION_LIST.append(sys.stdin)		
+	CONNECTION_LIST.append(sys.stdin)
+	
+	try:
+		robotClient.connect((RobotHost,RobotListenerPort))
+		print "Connected to Robot"
+	except:
+		print "unable to connect"
+		sys.exit()
+		
+	CONNECTION_LIST.append(robotClient)	
 	
 	while True:
 		read_list, write_list, error_list = select.select(CONNECTION_LIST , [], [],0.1)
